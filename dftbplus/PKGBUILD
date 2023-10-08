@@ -1,0 +1,26 @@
+# Maintainer: Brent Westbrook <brent@bwestbro.com>
+pkgname=dftbplus
+pkgver=23.1
+pkgrel=1
+pkgdesc="DFTB+ general package for performing fast atomistic simulations"
+arch=('any')
+url="https://www.dftbplus.org/"
+license=('LGPL3' 'GPL3')
+groups=()
+depends=()
+makedepends=('make' 'cmake' 'gcc-libs')
+provides=('dftb+')
+source=("https://github.com/dftbplus/dftbplus/archive/refs/tags/${pkgver}.zip")
+sha256sums=('27c625755f3881d2b58418692d6fd03bf1cd1048f18c1513140646029aa957c6')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    FC=gfortran CC=gcc cmake -B _build .
+    cmake --build _build -- -j8
+}
+
+package() {
+    mkdir -p "$pkgdir/opt/dftb+"
+    cp "${srcdir}/${pkgname}-${pkgver}/_build/app/dftb+/dftb+" "$pkgdir/opt/dftb+/dftb+"
+    chmod 755 "$pkgdir/opt/dftb+/dftb+"
+}
