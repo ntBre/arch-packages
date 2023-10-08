@@ -1,0 +1,32 @@
+# Maintainer: Brent Westbrook <brent@bwestbro.com>
+pkgname=mopac
+pkgver=22.0.6
+pkgrel=1
+pkgdesc="a semiempirical quantum chemistry software package"
+arch=('any')
+url="http://openmopac.net/home.html"
+license=('unknown')
+groups=()
+depends=()
+makedepends=(
+'make'
+'cmake'
+'gcc-libs'
+)
+provides=('mopac')
+source=("https://github.com/openmopac/mopac/archive/refs/tags/v${pkgver}.zip")
+sha256sums=('ac467e3b70c5427b48aa9aecadfd53c7d8a35606a804d6c606f920da95618b6f')
+
+build() {
+cd "${srcdir}/${pkgname}-${pkgver}"
+mkdir -p build
+cd build
+cmake ..
+make mopac
+}
+
+package() {
+    mkdir -p "$pkgdir/opt/mopac"
+    cp "${srcdir}/${pkgname}-${pkgver}/build/mopac" "$pkgdir/opt/mopac/mopac"
+    chmod 755 "$pkgdir/opt/mopac/mopac"
+}
