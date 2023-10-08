@@ -77,4 +77,82 @@ Run `dftb+` as `/opt/dftb+/dftb+ dftb_in.hsd` and confirm that it exits
 successfully with `echo $?` printing `0`. The total energy printed to stdout on
 my machine is `-4.0779379E+00 H`.
 
+An example single-point energy simply omits the `Driver` section. Computing
+vibrational frequencies is a two-step procedure and involves the use of the
+`modes` program that I haven't packaged yet. It should be located at
+`src/dftbplus-23.1/_build/app/modes/modes`.
+
+Input to generate a Hessian uses the `SecondDerivatives` driver:
+
+```text
+Geometry = xyzFormat {
+    3
+Geometry Step: 9
+    O      0.00000000     -0.71603315      0.00000000      6.59260702
+    H      0.00000000     -0.14200298      0.77844804      0.70369649
+    H     -0.00000000     -0.14200298     -0.77844804      0.70369649
+}
+
+Driver = SecondDerivatives {
+}
+
+Hamiltonian = DFTB {
+  Scc = Yes
+  SlaterKosterFiles = Type2FileNames {
+    Prefix = "/opt/dftb+/slako/mio/mio-1-1/"
+    Separator = "-"
+    Suffix = ".skf"
+  }
+  MaxAngularMomentum {
+    O = "p"
+    H = "s"
+  }
+Charge = 0
+}
+
+Options {
+}
+
+Analysis {
+  CalculateForces = Yes
+}
+
+ParserOptions {
+  ParserVersion = 12
+}
+```
+
+Here you can also see an example of `xyzFormat` geometry input and a simplified
+`SlaterKosterFiles` input.
+
+This will write the file `hessian.out`. Combine that with the following in
+`modes_in.hsd` and then run the `modes` program to get vibrational frequencies.
+
+```text
+Geometry = xyzFormat {
+    3
+Geometry Step: 9
+    O      0.00000000     -0.71603315      0.00000000      6.59260702
+    H      0.00000000     -0.14200298      0.77844804      0.70369649
+    H     -0.00000000     -0.14200298     -0.77844804      0.70369649
+}
+
+Hessian {
+<<<"hessian.out"
+}
+
+Masses {
+        Mass {
+                Atoms = H
+                        MassPerAtom [amu] = 1.007825
+        }
+        Mass {
+                Atoms = O
+                        MassPerAtom [amu] = 16.00000
+        }
+}
+```
+
+This snippet also shows a general syntax for including files (`<<<"filename"`).
+
 [recipes]: https://dftbplus-recipes.readthedocs.io/en/latest/_downloads/5919f4094cd60c5c70c13b47928442f5/recipes.tar.bz2
