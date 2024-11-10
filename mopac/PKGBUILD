@@ -1,6 +1,6 @@
 # Maintainer: Brent Westbrook <brent@bwestbro.com>
 pkgname=mopac
-pkgver=22.0.6
+pkgver=23.0.0
 pkgrel=1
 pkgdesc="a semiempirical quantum chemistry software package"
 arch=('any')
@@ -15,7 +15,7 @@ makedepends=(
 )
 provides=('mopac')
 source=("https://github.com/openmopac/mopac/archive/refs/tags/v${pkgver}.zip")
-sha256sums=('ac467e3b70c5427b48aa9aecadfd53c7d8a35606a804d6c606f920da95618b6f')
+sha256sums=('db47d49c0f868d1d4eed5d35fd6d6a336c395fecf50ec2a5af7c849c588b70da')
 
 build() {
 cd "${srcdir}/${pkgname}-${pkgver}"
